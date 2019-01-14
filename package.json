@@ -7,7 +7,13 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ./",
     "pre-commit": "npm t",
-    "posttest": "npm run lint"
+    "posttest": "npm run lint",
+    "create:config": "knex init",
+    "migrate:make": "knex migrate:make",
+    "migrate:latest": "knex migrate:latest",
+    "migrate:rollback": "knex migrate:rollback",
+    "seed:db": "npm run migrate:rollback && npm run migrate:latest && NODE_ENV=test knex seed:run --env test",
+    "seed:dev:db": "knex migrate:rollback --env development && knex migrate:latest --env development && NODE_ENV=development knex seed:run --env development"
   },
   "repository": {
     "type": "git",
