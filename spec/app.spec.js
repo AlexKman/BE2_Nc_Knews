@@ -120,9 +120,36 @@ describe("/api", () => {
         .expect(200)
         .then(({ body }) => {
           expect(body.article[0].article_id).to.equal(4);
+          expect(body.article[0]).to.haveOwnProperty("count");
+          expect(body.article[0]).to.haveOwnProperty("author");
         }));
-    it.only("GET returns status:404 responds with message:not found", () => {
-      return request.get("/api/articles/250").expect(404);
+    it("GET returns status:404 responds with message:not found", () =>
+      request
+        .get("/api/articles/250")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).to.equal("Article not found");
+        }));
+    it("PATCH returns status:204 responds with updated article", () => {
+      return request
+        .patch("/api/articles/1")
+        .send({ inc_votes: 50 })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.article.votes).to.equal(50);
+        });
+    });
+    it("PATCH returns status:404 responds with message:not found", () => {
+      return request
+        .patch("/api/articles/5000")
+        .send({ inc_votes: 50 })
+        .expect(404);
+    });
+    it.only("PATCH returns status:400 responds with malformed request body", () => {
+      return request
+        .patch("/api/articles/1")
+        .send({ votes: 1 })
+        .expect(400);
     });
   });
 });
