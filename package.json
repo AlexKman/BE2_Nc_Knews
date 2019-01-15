@@ -4,8 +4,8 @@
   "description": "## Northcoders News API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint ./",
+    "test": "mocha spec/app.spec.js",
+    "lint": "eslint ./ --fix",
     "pre-commit": "npm t",
     "posttest": "npm run lint",
     "create:config": "knex init",
@@ -27,8 +27,12 @@
   },
   "homepage": "https://github.com/northcoders/BE2-NC-Knews#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
+    "express": "^4.16.4",
     "knex": "^0.15.2",
-    "pg": "^7.6.1"
+    "pg": "^7.6.1",
+    "supertest": "^3.3.0"
   },
   "devDependencies": {
     "eslint": "^5.9.0",

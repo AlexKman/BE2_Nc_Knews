@@ -1,35 +1,27 @@
-const topicsData = require("../test-data/topics");
-const usersData = require("../test-data/users");
-const articlesData = require("../test-data/articles");
-const commentsData = require("../test-data/comments");
-const { formatArticlesData, formatCommentsData } = require("../utils");
+const topicsData = require('../test-data/topics');
+const usersData = require('../test-data/users');
+const articlesData = require('../test-data/articles');
+const commentsData = require('../test-data/comments');
+const { formatArticlesData, formatCommentsData } = require('../utils');
 
-exports.seed = function(knex, Promise) {
-  return knex("topics")
+exports.seed = function (knex, Promise) {
+  return knex('topics')
     .del()
-    .then(() =>
-      knex("topics")
-        .insert(topicsData)
-        .returning("*")
-    )
-    .then(() => knex("users").del())
-    .then(() =>
-      knex("users")
-        .insert(usersData)
-        .returning("*")
-    )
-    .then(userRows => Promise.all([userRows, knex("articles").del()]))
-    .then(([userRows]) =>
-      Promise.all([
-        knex("articles")
-          .insert(formatArticlesData(articlesData))
-          .returning("*"),
-        userRows
-      ])
-    )
-    .then(([articlesDocs, userDocs]) =>
-      knex("comments")
-        .insert(formatCommentsData(commentsData, articlesDocs, userDocs))
-        .returning("*")
-    );
+    .then(() => knex('topics')
+      .insert(topicsData)
+      .returning('*'))
+    .then(() => knex('users').del())
+    .then(() => knex('users')
+      .insert(usersData)
+      .returning('*'))
+    .then(userRows => Promise.all([userRows, knex('articles').del()]))
+    .then(([userRows]) => Promise.all([
+      knex('articles')
+        .insert(formatArticlesData(articlesData))
+        .returning('*'),
+      userRows,
+    ]))
+    .then(([articlesDocs, userDocs]) => knex('comments')
+      .insert(formatCommentsData(commentsData, articlesDocs, userDocs))
+      .returning('*'));
 };
