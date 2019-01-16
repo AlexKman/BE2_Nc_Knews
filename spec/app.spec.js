@@ -45,7 +45,7 @@ describe("/api", () => {
         .expect(200)
         .then(({ body }) => {
           expect(body.articles[0].article_id).to.equal(12);
-          expect(body.articles[0]).to.haveOwnProperty("count");
+          expect(body.articles[0]).to.haveOwnProperty("comment_count");
           expect(body.articles.length).to.equal(10);
         }));
     it("GET returns status:200 of an array of all the articles for a given topic, tests start query", () =>
@@ -92,6 +92,14 @@ describe("/api", () => {
         .send(newArticle)
         .expect(400);
     });
+    it("PATCH status :405 handles invalid requests", () => {
+      const invalidMethods = ["patch", "put", "delete"];
+      const url = "/api/topics";
+      const invalidRequests = invalidMethods.map(invalidMethod =>
+        request[invalidMethod](url).expect(405)
+      );
+      return Promise.all(invalidRequests);
+    });
   });
   describe("/api/articles", () => {
     it("GET returns status:200 responds with an array of all the articles, also tests default limit query", () =>
@@ -100,7 +108,7 @@ describe("/api", () => {
         .expect(200)
         .then(({ body }) => {
           expect(body.articles.length).to.equal(10);
-          expect(body.articles[0]).to.haveOwnProperty("count");
+          expect(body.articles[0]).to.haveOwnProperty("comment_count");
           expect(body.articles[0]).to.haveOwnProperty("author");
           expect(body.articles[0].title).to.equal(
             "Living in the shadow of a great man"
@@ -120,7 +128,7 @@ describe("/api", () => {
         .expect(200)
         .then(({ body }) => {
           expect(body.article[0].article_id).to.equal(4);
-          expect(body.article[0]).to.haveOwnProperty("count");
+          expect(body.article[0]).to.haveOwnProperty("comment_count");
           expect(body.article[0]).to.haveOwnProperty("author");
         }));
     it("GET returns status:404 responds with message:not found", () =>
@@ -136,7 +144,7 @@ describe("/api", () => {
         .send({ inc_votes: 50 })
         .expect(200)
         .then(({ body }) => {
-          expect(body.article.votes).to.equal(50);
+          expect(body.article.votes).to.equal(150);
         });
     });
     it("PATCH returns status:404 responds with message:not found", () => {
@@ -145,11 +153,16 @@ describe("/api", () => {
         .send({ inc_votes: 50 })
         .expect(404);
     });
-    it.only("PATCH returns status:400 responds with malformed request body", () => {
+    it("DELETE returns status:204 responds with no content", () => {
+      return request.delete("/api/articles/1").expect(204);
+    });
+    it.only("GET returns status:200 responds with array of comments with given article_id", () => {
       return request
-        .patch("/api/articles/1")
-        .send({ votes: 1 })
-        .expect(400);
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles.length).length.equal(5);
+        });
     });
   });
 });

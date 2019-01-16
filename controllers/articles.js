@@ -19,7 +19,7 @@ exports.getArticles = (req, res, next) => {
     )
     .from("articles")
     .leftJoin("comments", "comments.article_id", "=", "articles.article_id")
-    .count("comments.article_id")
+    .count({ comment_count: "comments.article_id" })
     .groupBy("articles.article_id")
     .limit(maxResult)
     .orderBy(sort_by, sort_ascending === "true" ? "asc" : "desc")
@@ -42,7 +42,7 @@ exports.getArticleById = (req, res, next) => {
     .from("articles")
     .where("articles.article_id", req.params.article_id)
     .leftJoin("comments", "comments.article_id", "=", "articles.article_id")
-    .count("comments.article_id")
+    .count({ comment_count: "comments.article_id" })
     .groupBy("articles.article_id")
     .then(article => {
       if (article.length === 0)
@@ -64,6 +64,36 @@ exports.patchArticleVotes = (req, res, next) => {
       if (!article)
         return Promise.reject({ status: 404, message: "Article not found" });
       res.status(200).send({ article });
+    })
+    .catch(next);
+};
+
+exports.deleteArticle = (req, res, next) => {
+  connection
+    .select("*")
+    .where({ article_id: req.params.article_id })
+    .from("articles")
+    .del()
+    .then(() => {
+      res.status(204).send();
+    });
+};
+
+exports.getCommentsByArticleId = (req, res, next) => {
+  connection
+    .select(
+      "comments.comment_id",
+      "comments.username AS author",
+      "comments.votes",
+      "comments.created_at",
+      "comments.body",
+      "comments.article_id"
+    )
+    .where({ article_id: req.params.article_id })
+    .from("comments")
+    .returning("*")
+    .then(articles => {
+      res.status(200).send({ articles });
     })
     .catch(next);
 };
