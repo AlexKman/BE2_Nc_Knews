@@ -1,22 +1,23 @@
-const topicsRouter = require("express").Router();
+const topicsRouter = require('express').Router();
 const {
   getTopics,
   postTopic,
   getArticlesByTopic,
-  postArticleByTopic
-} = require("../controllers/topics");
+  postArticleByTopic,
+} = require('../controllers/topics');
 
-const { handle405 } = require("../errors");
+const { handle405 } = require('../errors');
 
 topicsRouter
-  .route("/")
+  .route('/')
   .get(getTopics)
   .post(postTopic)
   .all(handle405);
 
 topicsRouter
-  .route("/:topic/articles")
+  .route('/:topic/articles')
   .get(getArticlesByTopic)
-  .post(postArticleByTopic);
+  .post(postArticleByTopic)
+  .all(handle405);
 
 module.exports = topicsRouter;
