@@ -1,4 +1,4 @@
-const articlesRouter = require("express").Router();
+const articlesRouter = require('express').Router();
 const {
   getArticles,
   getArticleById,
@@ -7,31 +7,31 @@ const {
   getCommentsByArticleId,
   postCommentByArticleId,
   patchACommentByArticleId,
-  deleteCommentByArticleId
-} = require("../controllers/articles");
+  deleteCommentByArticleId,
+} = require('../controllers/articles');
 
-const { handle405 } = require("../errors");
+const { handle405 } = require('../errors');
 
 articlesRouter
-  .route("/")
+  .route('/')
   .get(getArticles)
   .all(handle405);
 
 articlesRouter
-  .route("/:article_id")
+  .route('/:article_id')
   .get(getArticleById)
   .patch(patchArticleVotes)
   .delete(deleteArticle)
   .all(handle405);
 
 articlesRouter
-  .route("/:article_id/comments")
+  .route('/:article_id/comments')
   .get(getCommentsByArticleId)
   .post(postCommentByArticleId)
   .all(handle405);
 
 articlesRouter
-  .route("/:article_id/comments/:comment_id")
+  .route('/:article_id/comments/:comment_id')
   .patch(patchACommentByArticleId)
   .delete(deleteCommentByArticleId)
   .all(handle405);

@@ -123,7 +123,10 @@ exports.postCommentByArticleId = (req, res, next) => {
     .insert({ ...req.body, ...req.params })
     .returning("*")
     .then(([comment]) => {
-      res.status(201).send({ comment });
+      console.log(comment);
+      if (!comment)
+        return Promise.reject({ status: 404, message: "Comment not found" });
+      res.status(200).send({ comment });
     })
     .catch(next);
 };
@@ -150,9 +153,10 @@ exports.deleteCommentByArticleId = (req, res, next) => {
     .select("*")
     .where({ article_id: req.params.article_id })
     .where({ comment_id: req.params.comment_id })
+    .returning("*")
     .from("comments")
     .del()
-    .then(() => {
+    .then(({ comment }) => {
       res.status(204).send();
     })
     .catch(next);

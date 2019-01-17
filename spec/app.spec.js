@@ -47,12 +47,14 @@ describe("/api", () => {
         .post("/api/topics")
         .send({ name: "Alex", description: "Northcoders" })
         .expect(400));
+  });
+  describe("/topics/:article_id/articles", () => {
     it("GET returns status:200 of an array of all the articles for a given topic, also tests default limit", () =>
       request
         .get("/api/topics/mitch/articles")
         .expect(200)
         .then(({ body }) => {
-          expect(body.articles[0].article_id).to.equal(12);
+          expect(body.articles[0].article_id).to.equal(1);
           expect(body.articles[0]).to.haveOwnProperty("comment_count");
           expect(body.articles.length).to.equal(10);
         }));
@@ -69,7 +71,7 @@ describe("/api", () => {
         .get("/api/topics/mitch/articles?p=1")
         .expect(200)
         .then(({ body }) => {
-          expect(body.articles[0].article_id).to.equal(11);
+          expect(body.articles[0].article_id).to.equal(2);
           expect(body.articles.length).to.equal(10);
         }));
     it("GET returns status:200 of an array of all the articles for a given topic, tests limit query", () =>
@@ -109,6 +111,7 @@ describe("/api", () => {
         .expect(400);
     });
   });
+
   describe("/api/articles", () => {
     it("GET returns status:200 responds with an array of all the articles, also tests default limit query", () =>
       request
@@ -121,6 +124,7 @@ describe("/api", () => {
           expect(body.articles[0].title).to.equal(
             "Living in the shadow of a great man"
           );
+          expect(body.articles[0].article_id).to.equal(1);
         }));
     it("status :405 handles invalid requests for /api/articles", () => {
       const invalidMethods = ["patch", "put", "delete"];
@@ -138,6 +142,16 @@ describe("/api", () => {
           expect(body.articles.length).to.equal(5);
           expect(body.articles[0].title).to.equal("Student SUES Mitch!");
         }));
+    it("GET returns status:200 responds with an array to articles, tests start query", () => {
+      return request
+        .get("/api/articles?p=5")
+        .expect(200)
+        .expect(({ body }) => {
+          expect(body.articles[0].article_id).to.equal(6);
+        });
+    });
+  });
+  describe("/api/articles/:article_id", () => {
     it("GET returns status:200 responds with an article with a given article_id", () =>
       request
         .get("/api/articles/4")
@@ -147,6 +161,7 @@ describe("/api", () => {
           expect(body.article[0]).to.haveOwnProperty("comment_count");
           expect(body.article[0]).to.haveOwnProperty("author");
         }));
+
     it("status :405 handles invalid requests for /api/articles/:article_id", () => {
       const invalidMethods = ["put", "post"];
       const url = "/api/articles/:article_id";
@@ -181,6 +196,11 @@ describe("/api", () => {
         .delete("/api/articles/1")
         .expect(204)
         .then(() => request.get("/api/articles/1").expect(404)));
+    it("DELETE returns status:404 when given invalid article_id", () => {
+      return request.delete("/api/articles/5000").expect(404);
+    });
+  });
+  describe("/api/article/article_id/comments", () => {
     it("GET returns status:200 responds with array of comments with given article_id, tests default limit query", () =>
       request
         .get("/api/articles/1/comments")
@@ -213,12 +233,18 @@ describe("/api", () => {
       return request
         .post("/api/articles/1/comments")
         .send(newComment)
-        .expect(201)
+        .expect(200)
         .then(({ body }) => {
           expect(body.comment.username).to.equal("butter_bridge");
           expect(body.comment.body).to.equal("this is the body");
         });
     });
+    // it.only("POST returns status:404 when given invalid article_id",()=>{
+    //   return request.post("/api/articles/6000/comments").send({
+    //     username: "butter_bridge",
+    //     body: "this is the body"
+    //   }).expect(404)
+    // })
     it("status :405 handles invalid requests for /api/articles/:article_id/comments", () => {
       const invalidMethods = ["put", "delete"];
       const url = "/api/articles/:article_id/comments";
@@ -227,6 +253,8 @@ describe("/api", () => {
       );
       return Promise.all(invalidRequests);
     });
+  });
+  describe("/api/articles/:article_id/comments/:comment_id", () => {
     it("PATCH returns status:200 responds with updated comment", () =>
       request
         .patch("/api/articles/1/comments/3")
@@ -243,29 +271,27 @@ describe("/api", () => {
         .then(({ body }) => {
           expect(body.message).to.equal("Comment not found");
         }));
-    it("DELETE returns status:204 responds with no content", () => {
-      return request
+    it("DELETE returns status:204 responds with no content", () =>
+      request
         .delete("/api/articles/1/comments/12")
         .expect(204)
-        .then(() => {
-          return connection("comments")
+        .then(() =>
+          connection("comments")
             .where("comment_id", 12)
             .then(({ body }) => {
               expect(body).to.equal(undefined);
-            });
-        });
-    });
+            })
+        ));
   });
   describe("/api/users", () => {
-    it("GET returns status:200 of an array of all user objects", () => {
-      return request
+    it("GET returns status:200 of an array of all user objects", () =>
+      request
         .get("/api/users")
         .expect(200)
         .then(({ body }) => {
           expect(body.users.length).to.equal(3);
           expect(body.users[0].username).to.equal("butter_bridge");
-        });
-    });
+        }));
     it("status :405 handles invalid requests for /api/users", () => {
       const invalidMethods = ["put", "post", "delete", "patch"];
       const url = "/api/users";
@@ -276,23 +302,21 @@ describe("/api", () => {
     });
   });
   describe("/api/users/:username", () => {
-    it("GET returns status:200 of user object with given username", () => {
-      return request
+    it("GET returns status:200 of user object with given username", () =>
+      request
         .get("/api/users/butter_bridge")
         .expect(200)
         .then(({ body }) => {
           expect(body.user.username).to.equal("butter_bridge");
-        });
-    });
-    it("GET returns status:404 user not found", () => {
-      return request
+        }));
+    it("GET returns status:404 user not found", () =>
+      request
         .get("/api/users/alexK")
         .expect(404)
         .then(({ body }) => {
           expect(body.message).to.equal("User not found");
-        });
-    });
-    it.only("status :405 handles invalid requests for /api/users/:username", () => {
+        }));
+    it("status :405 handles invalid requests for /api/users/:username", () => {
       const invalidMethods = ["put", "post", "delete", "patch"];
       const url = "/api/users/:username";
       const invalidRequests = invalidMethods.map(invalidMethod =>

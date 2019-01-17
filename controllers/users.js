@@ -1,10 +1,10 @@
-const connection = require("../db/connection");
+const connection = require('../db/connection');
 
 exports.getUsers = (req, res, next) => {
   connection
-    .select("*")
-    .from("users")
-    .then(users => {
+    .select('*')
+    .from('users')
+    .then((users) => {
       res.status(200).send({ users });
     })
     .catch(next);
@@ -12,12 +12,11 @@ exports.getUsers = (req, res, next) => {
 
 exports.getUserByUsername = (req, res, next) => {
   connection
-    .select("*")
-    .from("users")
-    .where("username", req.params.username)
+    .select('*')
+    .from('users')
+    .where('username', req.params.username)
     .then(([user]) => {
-      if (!user)
-        return Promise.reject({ status: 404, message: "User not found" });
+      if (!user) return Promise.reject({ status: 404, message: 'User not found' });
       res.status(200).send({ user });
     })
     .catch(next);
