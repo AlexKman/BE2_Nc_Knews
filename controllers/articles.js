@@ -80,14 +80,15 @@ exports.deleteArticle = (req, res, next) => {
     .del()
     .then(() => {
       res.status(204).send();
-    });
+    })
+    .catch(next);
 };
 
 exports.getCommentsByArticleId = (req, res, next) => {
   const {
     limit: maxResult = 10,
     orderBy: sort_by = "created_at",
-    sort_descending,
+    sort_ascending,
     p = 0
   } = req.query;
   connection
@@ -102,16 +103,16 @@ exports.getCommentsByArticleId = (req, res, next) => {
     .where({ article_id: req.params.article_id })
     .from("comments")
     .limit(maxResult)
-    .orderBy(sort_by, sort_descending === "true" ? "desc" : "asc")
+    .orderBy(sort_by, sort_ascending === "true" ? "asc" : "desc")
     .offset(p)
-    .then(articles => {
-      if (articles.length === 0) {
+    .then(comments => {
+      if (comments.length === 0) {
         return Promise.reject({
           status: 404,
           message: "No comments found/ no article found"
         });
       }
-      res.status(200).send({ articles });
+      res.status(200).send({ comments });
     })
     .catch(next);
 };
@@ -153,5 +154,5 @@ exports.deleteCommentByArticleId = (req, res, next) => {
     .then(() => {
       res.status(204).send();
     })
-    .catch(console.log);
+    .catch(next);
 };

@@ -169,6 +169,7 @@ describe("/api", () => {
         .expect(200)
         .then(({ body }) => {
           expect(body.article.votes).to.equal(150);
+          expect(body.article.article_id).to.equal(1);
         }));
     it("PATCH returns status:404 responds with message:not found", () =>
       request
@@ -185,16 +186,16 @@ describe("/api", () => {
         .get("/api/articles/1/comments")
         .expect(200)
         .then(({ body }) => {
-          expect(body.articles.length).to.equal(10);
-          expect(body.articles[0].article_id).to.equal(1);
+          expect(body.comments.length).to.equal(10);
+          expect(body.comments[0].article_id).to.equal(1);
         }));
     it("GET returns status:200 responds with an array of comments with given article_id, tests limit query and page start query", () =>
       request
         .get("/api/articles/1/comments?limit=5?p=3")
         .expect(200)
         .then(({ body }) => {
-          expect(body.articles.length).to.equal(5);
-          expect(body.articles[0].author).to.equal("butter_bridge");
+          expect(body.comments.length).to.equal(5);
+          expect(body.comments[0].author).to.equal("butter_bridge");
         }));
     it("GET returns status:404 responds with message:not found", () =>
       request
@@ -242,10 +243,46 @@ describe("/api", () => {
         .then(({ body }) => {
           expect(body.message).to.equal("Comment not found");
         }));
-    it.only("DELETE returns status:204 responds with no content", () =>
-      request
-        .delete("/api/articles/1/comments/32")
+    it("DELETE returns status:204 responds with no content", () => {
+      return request
+        .delete("/api/articles/1/comments/12")
         .expect(204)
-        .then(() => request.get("/api/articles/1/comments/32").expect(404)));
+        .then(() => {
+          return connection("comments")
+            .where("comment_id", 12)
+            .then(({ body }) => {
+              expect(body).to.equal(undefined);
+            });
+        });
+    });
+  });
+  describe("/api/users", () => {
+    it("GET returns status:200 of an array of all user objects", () => {
+      return request
+        .get("/api/users")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.users.length).to.equal(3);
+          expect(body.users[0].username).to.equal("butter_bridge");
+        });
+    });
+    it("status :405 handles invalid requests for /api/articles/:article_id", () => {
+      const invalidMethods = ["put", "post", "delete", "patch"];
+      const url = "/api/users";
+      const invalidRequests = invalidMethods.map(invalidMethod =>
+        request[invalidMethod](url).expect(405)
+      );
+      return Promise.all(invalidRequests);
+    });
+  });
+  describe("/api/users/:username", () => {
+    it.only("GET returns status:200 of user object with given username", () => {
+      return request
+        .get("/api/users/butter_bridge")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.user.username).to.equal("butter_bridge");
+        });
+    });
   });
 });

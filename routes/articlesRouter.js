@@ -33,6 +33,7 @@ articlesRouter
 articlesRouter
   .route("/:article_id/comments/:comment_id")
   .patch(patchACommentByArticleId)
-  .delete(deleteCommentByArticleId);
+  .delete(deleteCommentByArticleId)
+  .all(handle405);
 
 module.exports = articlesRouter;
