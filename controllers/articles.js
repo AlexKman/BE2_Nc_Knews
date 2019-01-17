@@ -1,4 +1,5 @@
 const connection = require("../db/connection");
+const endpoints = require("../endpoints.json");
 
 exports.getArticles = (req, res, next) => {
   const {
@@ -155,4 +156,8 @@ exports.deleteCommentByArticleId = (req, res, next) => {
       res.status(204).send();
     })
     .catch(next);
+};
+
+exports.sendEndpoints = (req, res, next) => {
+  res.status(200).send(endpoints);
 };
