@@ -7,6 +7,9 @@ usersRouter
   .get(getUsers)
   .all(handle405);
 
-usersRouter.route("/:username").get(getUserByUsername);
+usersRouter
+  .route("/:username")
+  .get(getUserByUsername)
+  .all(handle405);
 
 module.exports = usersRouter;

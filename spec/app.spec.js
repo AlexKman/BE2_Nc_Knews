@@ -266,7 +266,7 @@ describe("/api", () => {
           expect(body.users[0].username).to.equal("butter_bridge");
         });
     });
-    it("status :405 handles invalid requests for /api/articles/:article_id", () => {
+    it("status :405 handles invalid requests for /api/users", () => {
       const invalidMethods = ["put", "post", "delete", "patch"];
       const url = "/api/users";
       const invalidRequests = invalidMethods.map(invalidMethod =>
@@ -276,13 +276,29 @@ describe("/api", () => {
     });
   });
   describe("/api/users/:username", () => {
-    it.only("GET returns status:200 of user object with given username", () => {
+    it("GET returns status:200 of user object with given username", () => {
       return request
         .get("/api/users/butter_bridge")
         .expect(200)
         .then(({ body }) => {
           expect(body.user.username).to.equal("butter_bridge");
         });
+    });
+    it("GET returns status:404 user not found", () => {
+      return request
+        .get("/api/users/alexK")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).to.equal("User not found");
+        });
+    });
+    it.only("status :405 handles invalid requests for /api/users/:username", () => {
+      const invalidMethods = ["put", "post", "delete", "patch"];
+      const url = "/api/users/:username";
+      const invalidRequests = invalidMethods.map(invalidMethod =>
+        request[invalidMethod](url).expect(405)
+      );
+      return Promise.all(invalidRequests);
     });
   });
 });

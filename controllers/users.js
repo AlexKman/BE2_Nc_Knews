@@ -16,6 +16,8 @@ exports.getUserByUsername = (req, res, next) => {
     .from("users")
     .where("username", req.params.username)
     .then(([user]) => {
+      if (!user)
+        return Promise.reject({ status: 404, message: "User not found" });
       res.status(200).send({ user });
     })
     .catch(next);
