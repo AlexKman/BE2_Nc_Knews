@@ -14,13 +14,28 @@ This project uses node version `v8.10.0` and postgres version `10.6`.
 
 To clone the repository use git clone `https://github.com/AlexKman/BE2-NC-Knews.git` in your terminal
 
-To set the databases up and prepare for seeding run the following commands: 
+To create and seed the databases run the following commands: 
 
 * `npm run seed_setup`
 * `npm run seed:db`
 * `npm run seed:dev:db`
 
 To listen on the server and make requests on the local host run the command `npm start`
+
+Below is a list of all the test dependencies require for this project:
+
+* `body-parser` : `1.18.3`
+* `chai` : `4.2.0`
+* `express` : `4.16.4`
+* `knex` : `0.15.2`
+* `pg` : `7.6.1`
+* `supertest` : `3.3.0`
+* `eslint` : `5.9.0`
+* `eslint-config-airbnb` : `17.1.0`
+* `eslint-plugin-import` : `2.14.0`
+* `husky` : `1.1.14`
+* `mocha` : `5.2.0`
+
 
 #### Endpoint details
 
