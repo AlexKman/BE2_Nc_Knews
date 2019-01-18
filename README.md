@@ -2,7 +2,7 @@
 
 ## Northcoders News API
 
-### Background
+### Description
 
 We will be building the API to use in the Northcoders News Sprint during the Front End block of the course.
 
