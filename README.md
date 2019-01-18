@@ -46,11 +46,11 @@ The database is using PSQL, and you will interact with it using [Knex](https://k
 
 **GET**
 
-/api/articles/:article*id: \_Responds with an article object for a given article_id*
+/api/articles/:article_id: _Responds with an article object for a given article_id_
 
 **PATCH**
 
-/api/articles/:article*id: \_Accepts an object in the form { inc_votes : newVote } responds with updated article object*
+/api/articles/:article_id: _Accepts an object in the form { inc_votes : newVote } responds with updated article object_
 
 **DELETE** /api/articles/:article_id: Deletes given article by article_id responds with 204 and no content
 
