@@ -8,6 +8,18 @@ This is the API used in the Northcoders News Sprint which is using a database of
 
 The database is using PSQL, and you will interact with it using [Knex](https://knexjs.org).
 
+#### Run this project locally
+
+This project uses node version `v8.10.0` and postgres version `10.6`.
+
+To clone the repository use git clone https://github.com/AlexKman/BE2-NC-Knews.git in your terminal
+
+To set the databases up and prepare for seeding run the following commands: 
+
+* npm run seed_setup
+* npm run seed:db
+* npm run seed:dev:db
+
 #### Endpoint details
 
 **GET** 
