@@ -4,9 +4,11 @@
 
 ### Description
 
-We will be building the API to use in the Northcoders News Sprint during the Front End block of the course.
+This is the API used in the Northcoders News Sprint which is using a database of topics, articles, comments and users
 
-Our database will be PSQL, and you will interact with it using [Knex](https://knexjs.org).
+The database is using PSQL, and you will interact with it using [Knex](https://knexjs.org).
+
+##### Endpoint details
 
 ### NOTE:
 
@@ -15,7 +17,6 @@ For this sprint ensure you have the eslint extension installed in VS-Code as it 
 ### Step 1 - Seeding
 
 Data has been provided for both testing and development environments so you will need to write a seed function to seed your database. You should think about how you will write your seed file to use either test data or dev data depending on the environment that you're running in.
-
 
 1. You should have separate tables for topics, articles, users and comments, and you will need to think carefully about the order in which you seed your data.
 
@@ -48,7 +49,6 @@ Data has been provided for both testing and development environments so you will
   - `body`
 
 - NOTE: psql expects Date types to be in a date format - not a timestamp! However, you can easily turn a timestamp into a date using js...
-
 
 ### Step 2 - Building and Testing
 
@@ -98,12 +98,11 @@ Queries
   - `limit`, which limits the number of responses (defaults to 10)
   - `sort_by`, which sorts the articles by any valid column (defaults to date)
   - `p`, stands for page which specifies the page at which to start (calculated using limit)
-  - `order`, which can be set to `asc` or `desc` for ascending or descending  (defaults to descending)
-
+  - `order`, which can be set to `asc` or `desc` for ascending or descending (defaults to descending)
 
 ## IMPORTANT:
-* Both `comments` and `articles` data in the test-data are given ordered in descending order of time : this will be useful to you when it comes to writing your tests!
 
+- Both `comments` and `articles` data in the test-data are given ordered in descending order of time : this will be useful to you when it comes to writing your tests!
 
 ```http
 POST /api/topics/:topic/articles
@@ -133,8 +132,7 @@ Queries
   - `limit`, which limits the number of responses (defaults to 10)
   - `sort_by`, which sorts the articles by any valid column (defaults to date)
   - `p`, stands for page which specifies the page at which to start (calculated using limit)
-  - `order`, which can be set to `asc` or `desc` for ascending or descending  (defaults to descending)
-
+  - `order`, which can be set to `asc` or `desc` for ascending or descending (defaults to descending)
 
 ```http
 GET /api/articles/:article_id
@@ -156,11 +154,12 @@ PATCH /api/articles/:article_id
 ```
 
 - accepts an object in the form `{ inc_votes: newVote }`
+
   - `newVote` will indicate how much the `votes` property in the database should be updated by
     E.g `{ inc_votes : 1 }` would increment the current article's vote property by 1
     `{ inc_votes : -100 }` would decrement the current article's vote property by 100
 
-- this end-point should respond with the article you have just updated    
+- this end-point should respond with the article you have just updated
 
 ```http
 DELETE /api/articles/:article_id
@@ -202,6 +201,7 @@ PATCH /api/articles/:article_id/comments/:comment_id
 ```
 
 - accepts an object in the form `{ inc_votes: newVote }`
+
   - `newVote` will indicate how much the `votes` property in the database should be updated by
     E.g `{ inc_votes : 1 }` would increment the current article's vote property by 1
     `{ inc_votes : -1 }` would decrement the current article's vote property by 1
