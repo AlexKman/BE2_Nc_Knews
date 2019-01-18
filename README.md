@@ -4,11 +4,39 @@
 
 ### Description
 
-This is the API used in the Northcoders News Sprint which is using a database of topics, articles, comments and users
+This is the API used in the Northcoders News Sprint which is using a database of topics articles comments and users
 
 The database is using PSQL, and you will interact with it using [Knex](https://knexjs.org).
 
-##### Endpoint details
+#### Endpoint details
+
+**GET** /api/topics : Responds with an array of topic objects
+
+**POST** /api/topics/: Accepts object containing unique slug and desciption property responds with posted object
+
+**GET** /api/topics/:topic/articles Responds with array of articles for a given topic
+
+**POST** /api/topics/:topic/articles: Accepts object containing a title body and username property responds with posted article
+
+**GET** /api/articles: Responds with an array of article objects
+
+**GET** /api/articles/:article_id: Responds with an article object for a given article_id
+
+**PATCH** /api/articles/:article_id: Accepts an object in the form { inc_votes : newVote } responds with updated article object
+
+**DELETE** /api/articles/:article_id: Deletes given article by article_id responds with 204 and no content
+
+**GET** /api/articles/:article_id/comments: Responds with an array of comments for the given article_id
+
+**POST** /api/articles/:article_id/comments: Accepts an object with a body and username property responds with the posted comment object
+
+**PATCH** /api/articles/:article_id/comments/:comment_id: Accepts an object in the form { inc_votes : newVote } responds with updated comment
+
+**DELETE** /api/articles/:article_id/comments/:comment_id: Deletes given comment by comment_id responds with 204 and no content
+
+**GET** /api/users: Responds with an array of user objects
+
+**GET** /api/users/username: Responds with a user object for a given username
 
 ### NOTE:
 
@@ -18,7 +46,7 @@ For this sprint ensure you have the eslint extension installed in VS-Code as it 
 
 Data has been provided for both testing and development environments so you will need to write a seed function to seed your database. You should think about how you will write your seed file to use either test data or dev data depending on the environment that you're running in.
 
-1. You should have separate tables for topics, articles, users and comments, and you will need to think carefully about the order in which you seed your data.
+1. You should have separate tables for topics articles users and comments and you will need to think carefully about the order in which you seed your data.
 
 - Each topic should have:
 
@@ -48,7 +76,7 @@ Data has been provided for both testing and development environments so you will
   - `created_at` defaults to the current date
   - `body`
 
-- NOTE: psql expects Date types to be in a date format - not a timestamp! However, you can easily turn a timestamp into a date using js...
+- NOTE: psql expects Date types to be in a date format - not a timestamp! However you can easily turn a timestamp into a date using js...
 
 ### Step 2 - Building and Testing
 
@@ -56,8 +84,8 @@ Data has been provided for both testing and development environments so you will
 2.  Mount an API Router onto your app
 3.  Define the routes described below
 4.  Define controller functions for each of your routes.
-5.  Use proper project configuration from the offset, being sure to treat development and test differently.
-6.  Test each route **as you go**, checking both successful requests and the variety of errors you could expect to encounter.
+5.  Use proper project configuration from the offset being sure to treat development and test differently.
+6.  Test each route **as you go** checking both successful requests and the variety of errors you could expect to encounter.
 
 **HINT** You will need to take advantage of knex migrations in order to efficiently test your application.
 
@@ -75,7 +103,7 @@ GET /api/topics
 POST /api/topics
 ```
 
-- accepts an object containing `slug` and `description` property, the `slug` must be unique
+- accepts an object containing `slug` and `description` property the `slug` must be unique
 - responds with the posted topic object
 
 ```http
@@ -84,7 +112,7 @@ GET /api/topics/:topic/articles
 
 - responds with an array of article objects for a given topic
 - each article should have:
-  - `author` which is the `username` from the users table,
+  - `author` which is the `username` from the users table
   - `title`
   - `article_id`
   - `votes`
@@ -95,10 +123,10 @@ GET /api/topics/:topic/articles
 Queries
 
 - This route should accept the following queries:
-  - `limit`, which limits the number of responses (defaults to 10)
-  - `sort_by`, which sorts the articles by any valid column (defaults to date)
-  - `p`, stands for page which specifies the page at which to start (calculated using limit)
-  - `order`, which can be set to `asc` or `desc` for ascending or descending (defaults to descending)
+  - `limit` which limits the number of responses (defaults to 10)
+  - `sort_by` which sorts the articles by any valid column (defaults to date)
+  - `p` stands for page which specifies the page at which to start (calculated using limit)
+  - `order` which can be set to `asc` or `desc` for ascending or descending (defaults to descending)
 
 ## IMPORTANT:
 
@@ -108,7 +136,7 @@ Queries
 POST /api/topics/:topic/articles
 ```
 
-- accepts an object containing a `title` , `body` and a `username` property
+- accepts an object containing a `title` `body` and a `username` property
 - responds with the posted article
 
 ```http
@@ -117,7 +145,7 @@ GET /api/articles
 
 - responds with an array of article objects
 - each article should have:
-  - `author` which is the `username` from the users table,
+  - `author` which is the `username` from the users table
   - `title`
   - `article_id`
   - `body`
@@ -129,10 +157,10 @@ GET /api/articles
 Queries
 
 - This route should accept the following queries:
-  - `limit`, which limits the number of responses (defaults to 10)
-  - `sort_by`, which sorts the articles by any valid column (defaults to date)
-  - `p`, stands for page which specifies the page at which to start (calculated using limit)
-  - `order`, which can be set to `asc` or `desc` for ascending or descending (defaults to descending)
+  - `limit` which limits the number of responses (defaults to 10)
+  - `sort_by` which sorts the articles by any valid column (defaults to date)
+  - `p` stands for page which specifies the page at which to start (calculated using limit)
+  - `order` which can be set to `asc` or `desc` for ascending or descending (defaults to descending)
 
 ```http
 GET /api/articles/:article_id
@@ -141,7 +169,7 @@ GET /api/articles/:article_id
 - responds with an article object
 - each article should have:
   - `article_id`
-  - `author` which is the `username` from the users table,
+  - `author` which is the `username` from the users table
   - `title`
   - `votes`
   - `body`
@@ -184,10 +212,10 @@ Queries
 
 - This route should accept the following queries:
 
-* limit, which limits the number of responses (defaults to 10)
-* sort_by, which sorts the articles by any valid column (defaults to date)
-* p, stands for page which specifies the page at which to start (calculated using limit)
-* sort_ascending, when "true" returns the results sorted in ascending order (defaults to descending)
+* limit which limits the number of responses (defaults to 10)
+* sort_by which sorts the articles by any valid column (defaults to date)
+* p stands for page which specifies the page at which to start (calculated using limit)
+* sort_ascending when true returns the results sorted in ascending order (defaults to descending)
 
 ```http
 POST /api/articles/:article_id/comments
@@ -247,6 +275,6 @@ Make sure your application and your database is hosted using heroku
 
 ### Step 4 - Preparing for your review and portfolio
 
-Finally, you should write a README for this project (and remove this one). The README should be broken down like this: https://gist.github.com/PurpleBooth/109311bb0361f32d87a2
+Finally you should write a README for this project (and remove this one). The README should be broken down like this: https://gist.github.com/PurpleBooth/109311bb0361f32d87a2
 
 It should also include the link where your herokuapp is hosted.
