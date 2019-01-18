@@ -12,11 +12,22 @@ The database is using PSQL, and you will interact with it using [Knex](https://k
 
 **GET**
 
-/api/topics : \*Responds with an array of topic objects\*\*
+/api/topics : _Responds with an array of topic objects_
 
-**POST** /api/topics/: Accepts object containing unique slug and desciption property responds with posted object
+**POST**
 
-**GET** /api/topics/:topic/articles Responds with array of articles for a given topic
+/api/topics/ : _Accepts object containing unique slug and description property responds with posted object_
+
+#### Queries
+
+     * limit : limits the number of responses (defaults to 10)
+     * sort_by : sorts the articles by any valid column, defaults to date
+     * p: stands for pag which specifies the page at which to start (calculated using limit)
+     * order: can be set to asc (ascending) or desc (descending) (defaults to ascending)
+
+**GET**
+
+/api/topics/:topic/articles : _Responds with array of articles for a given topic_
 
 **POST** /api/topics/:topic/articles: Accepts object containing a title body and username property responds with posted article
 
