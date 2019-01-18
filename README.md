@@ -10,7 +10,9 @@ The database is using PSQL, and you will interact with it using [Knex](https://k
 
 #### Endpoint details
 
-**GET** /api/topics : Responds with an array of topic objects
+**GET**
+
+/api/topics : \*Responds with an array of topic objects\*\*
 
 **POST** /api/topics/: Accepts object containing unique slug and desciption property responds with posted object
 
