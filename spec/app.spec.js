@@ -81,10 +81,14 @@ describe("/api", () => {
         .then(({ body }) => {
           expect(body.articles.length).to.equal(5);
         }));
-    it("GET returns status:404 responds with error 404 not found", () =>
-      request.get("/api/topics/paul/articles").then(({ body }) => {
-        expect(body.message).to.equal("Topic not found");
-      }));
+    it.only("GET returns status:404 responds with error 404 not found", () =>
+      request
+        .get("/api/topics/paul/articles")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).to.equal("Topic not found");
+        }));
+    //^^ should make post and then a get
     it("POST returns status:201 respons with the newly added article", () => {
       const newArticle = {
         title: "new article",

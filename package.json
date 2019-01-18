@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha spec/app.spec.js",
+    "start": "node listen.js",
     "lint": "eslint ./ --fix",
     "pre-commit": "npm t",
     "posttest": "npm run lint",
@@ -12,8 +13,12 @@
     "migrate:make": "knex migrate:make",
     "migrate:latest": "knex migrate:latest",
     "migrate:rollback": "knex migrate:rollback",
-    "seed:db": "npm run migrate:rollback && npm run migrate:latest && NODE_ENV=test knex seed:run --env test",
-    "seed:dev:db": "knex migrate:rollback --env development && knex migrate:latest --env development && NODE_ENV=development knex seed:run --env development"
+    "seed:db": "knex migrate:rollback --env test && knex migrate:latest --env test && NODE_ENV=test knex seed:run --env test",
+    "seed:dev:db": "knex migrate:rollback --env development && knex migrate:latest --env development && NODE_ENV=development knex seed:run --env development",
+    "seed_setup": "psql -f db/dev_setup.sql && psql -f test_setup.sql",
+    "seed:prod": "DB_URL=$(heroku config:get DATABASE_URL) knex seed:run --env production",
+    "migrate:latest:prod": "DB_URL=$(heroku config:get DATABASE_URL) knex migrate:latest --env production",
+    "migrate:rollback:prod": "DB_URL=$(heroku config:get DATABASE_URL) knex migrate:rollback --env production"
   },
   "repository": {
     "type": "git",
@@ -38,6 +43,7 @@
     "eslint": "^5.9.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "husky": "^1.1.4"
+    "husky": "^1.1.4",
+    "mocha": "^5.2.0"
   }
 }

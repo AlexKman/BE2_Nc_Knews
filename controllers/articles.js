@@ -45,7 +45,7 @@ exports.getArticleById = (req, res, next) => {
     .leftJoin("comments", "comments.article_id", "=", "articles.article_id")
     .count({ comment_count: "comments.article_id" })
     .groupBy("articles.article_id")
-    .then(article => {
+    .then(({ article }) => {
       if (article.length === 0) {
         return Promise.reject({
           status: 404,
@@ -90,7 +90,7 @@ exports.getCommentsByArticleId = (req, res, next) => {
     limit: maxResult = 10,
     orderBy: sort_by = "created_at",
     sort_ascending,
-    p = 0
+    p = 1
   } = req.query;
   connection
     .select(
@@ -105,7 +105,7 @@ exports.getCommentsByArticleId = (req, res, next) => {
     .from("comments")
     .limit(maxResult)
     .orderBy(sort_by, sort_ascending === "true" ? "asc" : "desc")
-    .offset(p)
+    .offset((p - 1) * limit)
     .then(comments => {
       if (comments.length === 0) {
         return Promise.reject({
