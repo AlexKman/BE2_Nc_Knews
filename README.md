@@ -18,6 +18,25 @@ The database is using PSQL, and you will interact with it using [Knex](https://k
 
 /api/topics/ : _Accepts object containing unique slug and description property responds with posted object_
 
+**GET**
+
+/api/topics/:topic/articles : _Responds with array of articles for a given topic_
+
+#### Queries
+
+     * limit : limits the number of responses (defaults to 10)
+     * sort_by : sorts the articles by any valid column, defaults to date
+     * p: stands for pag which specifies the page at which to start (calculated using limit)
+     * order: can be set to asc (ascending) or desc (descending) (defaults to ascending)
+
+**POST**
+
+/api/topics/:topic/articles: _Accepts object containing a title body and username property responds with posted article_
+
+**GET**
+
+/api/articles: _Responds with an array of article objects_
+
 #### Queries
 
      * limit : limits the number of responses (defaults to 10)
@@ -27,15 +46,11 @@ The database is using PSQL, and you will interact with it using [Knex](https://k
 
 **GET**
 
-/api/topics/:topic/articles : _Responds with array of articles for a given topic_
+/api/articles/:article*id: \_Responds with an article object for a given article_id*
 
-**POST** /api/topics/:topic/articles: Accepts object containing a title body and username property responds with posted article
+**PATCH**
 
-**GET** /api/articles: Responds with an array of article objects
-
-**GET** /api/articles/:article_id: Responds with an article object for a given article_id
-
-**PATCH** /api/articles/:article_id: Accepts an object in the form { inc_votes : newVote } responds with updated article object
+/api/articles/:article*id: \_Accepts an object in the form { inc_votes : newVote } responds with updated article object*
 
 **DELETE** /api/articles/:article_id: Deletes given article by article_id responds with 204 and no content
 
