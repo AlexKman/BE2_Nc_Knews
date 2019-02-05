@@ -15,7 +15,7 @@
     "migrate:rollback": "knex migrate:rollback",
     "seed:db": "knex migrate:rollback --env test && knex migrate:latest --env test && NODE_ENV=test knex seed:run --env test",
     "seed:dev:db": "knex migrate:rollback --env development && knex migrate:latest --env development && NODE_ENV=development knex seed:run --env development",
-    "seed_setup": "psql -f db/dev_setup.sql && psql -f test_setup.sql",
+    "seed_setup": "psql -f db/dev_setup.sql && psql -f db/test_setup.sql",
     "seed:prod": "DB_URL=$(heroku config:get DATABASE_URL) knex seed:run --env production",
     "migrate:latest:prod": "DB_URL=$(heroku config:get DATABASE_URL) knex migrate:latest --env production",
     "migrate:rollback:prod": "DB_URL=$(heroku config:get DATABASE_URL) knex migrate:rollback --env production"
@@ -34,6 +34,7 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "chai": "^4.2.0",
+    "cors": "^2.8.5",
     "express": "^4.16.4",
     "knex": "^0.15.2",
     "pg": "^7.6.1",

@@ -6,8 +6,11 @@ exports.getArticles = (req, res, next) => {
     limit: maxResult = 10,
     orderBy: sort_by = "created_at",
     sort_ascending,
-    p = 0
+    p = 1
   } = req.query;
+
+  const offsetValue = (+p - 1) * maxResult;
+
   connection
     .select(
       "articles.article_id",
@@ -24,7 +27,7 @@ exports.getArticles = (req, res, next) => {
     .groupBy("articles.article_id")
     .limit(maxResult)
     .orderBy(sort_by, sort_ascending === "true" ? "asc" : "desc")
-    .offset(p)
+    .offset(offsetValue)
     .then(articles => res.status(200).send({ articles }))
     .catch(next);
 };
@@ -45,14 +48,15 @@ exports.getArticleById = (req, res, next) => {
     .leftJoin("comments", "comments.article_id", "=", "articles.article_id")
     .count({ comment_count: "comments.article_id" })
     .groupBy("articles.article_id")
-    .then(({ article }) => {
+    .then(article => {
+      console.log(article);
       if (article.length === 0) {
         return Promise.reject({
           status: 404,
           message: "Article not found"
         });
       }
-      res.status(200).send({ article });
+      res.status(200).send({ article: article[0] });
     })
     .catch(next);
 };
@@ -79,8 +83,15 @@ exports.deleteArticle = (req, res, next) => {
     .where({ article_id: req.params.article_id })
     .from("articles")
     .del()
-    .then(() => {
-      res.status(204).send();
+    .then(deleteCount => {
+      if (deleteCount === 0) {
+        return Promise.reject({
+          status: 404,
+          message: "No delete, invalid article_id"
+        });
+      } else {
+        res.status(204).send();
+      }
     })
     .catch(next);
 };
@@ -92,6 +103,8 @@ exports.getCommentsByArticleId = (req, res, next) => {
     sort_ascending,
     p = 1
   } = req.query;
+
+  const offsetValue = (+p - 1) * maxResult;
   connection
     .select(
       "comments.comment_id",
@@ -105,7 +118,7 @@ exports.getCommentsByArticleId = (req, res, next) => {
     .from("comments")
     .limit(maxResult)
     .orderBy(sort_by, sort_ascending === "true" ? "asc" : "desc")
-    .offset((p - 1) * limit)
+    .offset(offsetValue)
     .then(comments => {
       if (comments.length === 0) {
         return Promise.reject({
